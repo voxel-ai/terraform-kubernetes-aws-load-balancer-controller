@@ -348,7 +348,7 @@ resource "kubernetes_service_account" "this" {
       "app.kubernetes.io/managed-by" = "terraform"
     }
   }
-  depends_on = [var.alb_controller_depends_on, kubernetes_namespace.alb]
+  depends_on = [var.alb_controller_depends_on]
 }
 
 resource "kubernetes_cluster_role" "this" {
@@ -435,13 +435,14 @@ resource "kubernetes_cluster_role_binding" "this" {
 
 resource "helm_release" "alb_controller" {
 
-  name       = "aws-load-balancer-controller"
-  repository = local.alb_controller_helm_repo
-  chart      = local.alb_controller_chart_name
-  version    = local.alb_controller_chart_version
-  namespace  = var.k8s_namespace
-  atomic     = true
-  timeout    = 900
+  name             = "aws-load-balancer-controller"
+  repository       = local.alb_controller_helm_repo
+  chart            = local.alb_controller_chart_name
+  version          = local.alb_controller_chart_version
+  namespace        = var.k8s_namespace
+  create_namespace = true # Let Helm handle the namespace creation
+  atomic           = true
+  timeout          = 900
 
   dynamic "set" {
 
@@ -484,7 +485,7 @@ resource "helm_release" "alb_controller" {
     }
   }
 
-  depends_on = [var.alb_controller_depends_on, kubernetes_namespace.alb]
+  depends_on = [var.alb_controller_depends_on]
 }
 
 # Generate a kubeconfig file for the EKS cluster to use in provisioners
