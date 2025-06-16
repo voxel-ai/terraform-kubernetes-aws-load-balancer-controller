@@ -348,7 +348,7 @@ resource "kubernetes_service_account" "this" {
       "app.kubernetes.io/managed-by" = "terraform"
     }
   }
-  depends_on = [var.alb_controller_depends_on, kubernetes_namespace.alb]
+  depends_on = [var.alb_controller_depends_on]
 }
 
 resource "kubernetes_cluster_role" "this" {
@@ -485,7 +485,7 @@ resource "helm_release" "alb_controller" {
     }
   }
 
-  depends_on = [var.alb_controller_depends_on, kubernetes_namespace.alb]
+  depends_on = [var.alb_controller_depends_on]
 }
 
 # Generate a kubeconfig file for the EKS cluster to use in provisioners
