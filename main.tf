@@ -433,14 +433,6 @@ resource "kubernetes_cluster_role_binding" "this" {
   }
 }
 
-removed {
-  from = kubernetes_namespace.alb[0]
-
-  lifecycle {
-    destroy = false
-  }
-}
-
 resource "helm_release" "alb_controller" {
 
   name             = "aws-load-balancer-controller"
